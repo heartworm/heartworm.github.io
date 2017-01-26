@@ -47,7 +47,7 @@ Soundboard.prototype.loadAudio = function() {
 	var self = this;
 	var xhrRrah = new XMLHttpRequest();
 	xhrRrah.responseType = "arraybuffer";
-	xhrRrah.open("GET", "rrah.ogg", true);//HTTP GIT GIT GIT RRRRRRRRRRRRRRRRRRRRRRAH
+	xhrRrah.open("GET", "rrah.m4a", true);//HTTP GIT GIT GIT RRRRRRRRRRRRRRRRRRRRRRAH
 	xhrRrah.onload = function(e) {
 		self.actx.decodeAudioData(xhrRrah.response).then(function(buffer) {
 			self.buffers.bufRrah = buffer;
@@ -55,7 +55,7 @@ Soundboard.prototype.loadAudio = function() {
 	};
 	var xhrGit = new XMLHttpRequest();
 	xhrGit.responseType = "arraybuffer";
-	xhrGit.open("GET", "git.ogg", true);
+	xhrGit.open("GET", "git.m4a", true);
 	xhrGit.onload = function(e) {
 		self.actx.decodeAudioData(xhrGit.response).then(function(buffer) {
 			self.buffers.bufGit = buffer;
