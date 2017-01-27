@@ -36,6 +36,6 @@
 	margin: 10px 0;
 }
 
-.mainBtn:active, #btnRrah .on {
+.mainBtn:hover {
 	background-image: url("../img/rrahOn.png");
 }

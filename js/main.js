@@ -1,13 +1,11 @@
 function Soundboard() {
+	Soundboard.self = this;
+	
 	this.actx = new AudioContext();
 	this.sources = {
-		srcRrah: null,
-		srcGit: null
 	}
 	
 	this.buffers = {
-		bufGit: null,
-		bufRrah: null
 	}
 	this.loadElements();
 	this.loadAudio();
@@ -19,8 +17,8 @@ Soundboard.prototype.loadElements = function() {
 		btnGit: document.getElementById("btnGit")
 	});
 	
-	var startRrahHandler = this.startRrah.bind(this);
-	var endRrahHandler = this.endRrah.bind(this);
+	var startRrahHandler = this.startRrah;
+	var endRrahHandler = this.endRrah;
 	
 	this.elems.btnRrah.addEventListener("mousedown", startRrahHandler);
 	this.elems.btnRrah.addEventListener("touchstart", startRrahHandler);
@@ -40,32 +38,32 @@ Soundboard.prototype.loadElements = function() {
 		if (!onElem) endRrahHandler();
 		event.preventDefault();		
 	}.bind(this));
-	this.elems.btnGit.addEventListener("click", this.playGit.bind(this));
+	this.elems.btnGit.addEventListener("mousedown", this.playGit.bind(this));
+	this.elems.btnGit.addEventListener("touchstart", this.playGit.bind(this));
 };
 
 Soundboard.prototype.loadAudio = function() {
-	var self = this;
 	var xhrRrah = new XMLHttpRequest();
 	xhrRrah.responseType = "arraybuffer";
 	xhrRrah.open("GET", "rrah.m4a", true);//HTTP GIT GIT GIT RRRRRRRRRRRRRRRRRRRRRRAH
 	xhrRrah.onload = function(e) {
-		self.actx.decodeAudioData(xhrRrah.response).then(function(buffer) {
-			self.buffers.bufRrah = buffer;
+		Soundboard.self.actx.decodeAudioData(xhrRrah.response).then(function(buffer) {
+			Soundboard.self.buffers.bufRrah = buffer;
 		});
 	};
 	var xhrGit = new XMLHttpRequest();
 	xhrGit.responseType = "arraybuffer";
 	xhrGit.open("GET", "git.m4a", true);
 	xhrGit.onload = function(e) {
-		self.actx.decodeAudioData(xhrGit.response).then(function(buffer) {
-			self.buffers.bufGit = buffer;
+		Soundboard.self.actx.decodeAudioData(xhrGit.response).then(function(buffer) {
+			Soundboard.self.buffers.bufGit = buffer;
 		});
 	};
 	xhrRrah.send();
 	xhrGit.send();
 }
 
-Soundboard.prototype.startRrah = function(event) {
+Soundboard.prototype.startRrah = function(name, event) {
 	console.log("started");
 	var src = this.actx.createBufferSource();
 	src.loop = true;
@@ -81,14 +79,12 @@ Soundboard.prototype.startRrah = function(event) {
 	this.sources.srcRrah = src;
 	src.start();
 	
-	this.elems.btnRrah.classList.add("on");
-	
 	if (event) {
 		event.preventDefault();
 	}
 }
 
-Soundboard.prototype.endRrah = function(event) {
+Soundboard.prototype.endRrah = function(name, event) {
 	console.log("ended");
 	if (this.sources.srcRrah) {
 		this.sources.srcRrah.loop = false;

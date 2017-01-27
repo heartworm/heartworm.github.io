@@ -1,0 +1,62 @@
+[
+	{
+		name: "rrah",
+		files: [
+			{
+				filename: "rrah_2.m4a",
+				loopStart: 0.658,
+				loopEnd: 0.768
+			},
+			{
+				fileName: "rrah_1.m4a",
+				loopStart: 0.256,
+				loopEnd: 0.340
+			},
+			{
+				fileName: "rrah_0.m4a",
+				loopStart: 0.325,
+				loopEnd: 0.568
+			}
+		]
+	},
+		
+	{
+		name: "git",
+		files: [
+			{
+				fileName: "git_0.m4a"
+			},
+			{
+				fileName: "git_1.m4a"
+			},
+			{
+				fileName: "git_2.m4a"
+			}
+		]
+	},
+	
+	{
+		name: "yeah",
+		files: [
+			{
+				fileName: "yeah_0.m4a"
+			},
+			{
+				fileName: "yeah_1.m4a"
+			},
+			{
+				fileName: "yeah_2.m4a"
+			},
+			{
+				fileName: "yeah_3.m4a"
+			},
+			{
+				fileName: "yeah_4.m4a"
+			},
+			{
+				fileName: "yeah_5.m4a"
+			}
+		]
+	}
+]
+	
