@@ -57,6 +57,21 @@
 				"fileName": "yeah_5.m4a"
 			}
 		]
+	},
+	
+	{
+		"name": "intro",
+		"files": [
+			{
+				"fileName": "intro_0.m4a"
+			},
+			{
+				"fileName": "intro_1.m4a"
+			},
+			{
+				"fileName": "intro_2.m4a"
+			}
+		]
 	}
 ]
 	

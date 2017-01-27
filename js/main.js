@@ -1,5 +1,6 @@
 function Soundboard() {
 	Soundboard.self = this;
+	this.error = false;
 	
 	this.actx = new AudioContext();
 	this.sources = {
@@ -12,11 +13,47 @@ function Soundboard() {
 };
 
 Soundboard.prototype.onError = function(exception) {
+	Soundboard.self.onUpdateStatus("An error has occurred, try reloading.")
+	Soundboard.self.error = true;
 	console.log("error has occured");
+	console.log(exception);
+}
+
+Soundboard.prototype.onUpdateStatus = function(text) {
+	if (!Soundboard.self.error)
+		Soundboard.self.elems.status.textContent = text;
+} 
+
+Soundboard.prototype.onUpdateLoadStatus = function() {
+	var total = 0;
+	var completed = 0;
+	var samples = Soundboard.self.samples;
+	for (var sampleGroup in samples) {
+		if (samples.hasOwnProperty(sampleGroup)) {
+			sampleGroup = samples[sampleGroup];
+			total += sampleGroup.length;
+			for (var j = 0; j < sampleGroup.length; j++) {
+				if (sampleGroup[j].hasOwnProperty("buffer")) completed++;
+			}
+		}
+	}
+	var percentage = Math.round((completed / total) * 100);
+	Soundboard.self.onUpdateStatus("Loading audio assets: " + percentage + "%.");
+	if (percentage == 100) {
+		Soundboard.self.onLoad();
+	}
+}
+
+Soundboard.prototype.onLoad = function() {
+	console.log("completed load");
+	Soundboard.self.elems.statusOverlay.classList.add("hidden");
+	Soundboard.self.startAudio("intro");
 }
 
 Soundboard.prototype.loadElements = function() {
 	this.elems = Object.freeze({
+		statusOverlay: document.getElementById("statusOverlay"),
+		status: document.getElementById("status"),
 		btnRrah: document.getElementById("btnRrah"),
 		btnGit: document.getElementById("btnGit"),
 		btnYeah: document.getElementById("btnYeah")
@@ -62,14 +99,20 @@ Soundboard.prototype.loadAudioList = function() {
 	xhrJson.onload = function(event) {
 		try {
 			var arr = JSON.parse(xhrJson.response);
+			Soundboard.self.onUpdateStatus("Loading: Got audio list.")
+			
 			for (var i = 0; i < arr.length; i++) {
 				var sampleGroup = arr[i];
 				Soundboard.self.samples[sampleGroup.name] = sampleGroup.files;
 			}
 			Soundboard.self.loadBuffers();
+			
 		} catch (e) {
 			Soundboard.self.onError(e);
 		}
+	};
+	xhrJson.onerror = function(event) {
+		Soundboard.self.onError(event);
 	};
 	xhrJson.send();
 }
@@ -90,11 +133,15 @@ Soundboard.prototype.loadBuffers = function() {
 					try {
 						Soundboard.self.actx.decodeAudioData(event.target.response).then(function(buffer) {
 							sample.buffer = buffer;
+							Soundboard.self.onUpdateLoadStatus();
 						});
 					} catch (e) {
 						Soundboard.self.onError(e);	
 					}
 				}.bind(this, sample);
+				xhrAudio.onerror = function(event) {
+					Soundboard.self.onError(event);
+				};
 				xhrAudio.send();
 			}
 			
