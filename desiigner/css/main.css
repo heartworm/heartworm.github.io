@@ -1,5 +1,7 @@
 body {
 	background-color: #fafafa;
+	background-image: url("../img/bg.jpg");
+	background-position: center;
 }
 
 body, .mainBtn {
@@ -7,7 +9,6 @@ body, .mainBtn {
 }
 
 #footer {
-	font-family: sans-serif;
 	font-size: 20px;
 	opacity: 0.5;
 	color: #000000;
@@ -80,7 +81,7 @@ body, .mainBtn {
 	background-size: contain;
 	background-repeat: repeat-x;
 	background-color: #333333;
-	border: 1px solid black;
+	border: 2px none;
 	border-radius: 10px;
 
 	color: #f2f2f2;
