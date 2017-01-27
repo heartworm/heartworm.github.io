@@ -5,20 +5,27 @@ function Soundboard() {
 	this.sources = {
 	}
 	
-	this.buffers = {
+	this.samples = {
 	}
 	this.loadElements();
-	this.loadAudio();
+	this.loadAudioList();
 };
+
+Soundboard.prototype.onError = function(exception) {
+	console.log("error has occured");
+}
 
 Soundboard.prototype.loadElements = function() {
 	this.elems = Object.freeze({
 		btnRrah: document.getElementById("btnRrah"),
-		btnGit: document.getElementById("btnGit")
+		btnGit: document.getElementById("btnGit"),
+		btnYeah: document.getElementById("btnYeah")
 	});
 	
-	var startRrahHandler = this.startRrah;
-	var endRrahHandler = this.endRrah;
+	var startRrahHandler = this.startAudio.bind(this, "rrah");
+	var endRrahHandler = this.endAudio.bind(this, "rrah");
+	var playGitHandler = this.startAudio.bind(this, "git");
+	var playYeahHandler = this.startAudio.bind(this, "yeah");
 	
 	this.elems.btnRrah.addEventListener("mousedown", startRrahHandler);
 	this.elems.btnRrah.addEventListener("touchstart", startRrahHandler);
@@ -38,45 +45,86 @@ Soundboard.prototype.loadElements = function() {
 		if (!onElem) endRrahHandler();
 		event.preventDefault();		
 	}.bind(this));
-	this.elems.btnGit.addEventListener("mousedown", this.playGit.bind(this));
-	this.elems.btnGit.addEventListener("touchstart", this.playGit.bind(this));
+	
+	this.elems.btnGit.addEventListener("mousedown", playGitHandler);
+	this.elems.btnGit.addEventListener("touchstart", playGitHandler);
+	
+	this.elems.btnYeah.addEventListener("mousedown", playYeahHandler);
+	this.elems.btnYeah.addEventListener("touchstart", playYeahHandler);
 };
 
-Soundboard.prototype.loadAudio = function() {
-	var xhrRrah = new XMLHttpRequest();
-	xhrRrah.responseType = "arraybuffer";
-	xhrRrah.open("GET", "rrah.m4a", true);//HTTP GIT GIT GIT RRRRRRRRRRRRRRRRRRRRRRAH
-	xhrRrah.onload = function(e) {
-		Soundboard.self.actx.decodeAudioData(xhrRrah.response).then(function(buffer) {
-			Soundboard.self.buffers.bufRrah = buffer;
-		});
+Soundboard.prototype.loadAudioList = function() {
+	console.log("loading list");
+	
+	var xhrJson = new XMLHttpRequest();
+	xhrJson.responseType = "text";
+	xhrJson.open("GET", "aud/audio.json", true);
+	xhrJson.onload = function(event) {
+		try {
+			var arr = JSON.parse(xhrJson.response);
+			for (var i = 0; i < arr.length; i++) {
+				var sampleGroup = arr[i];
+				Soundboard.self.samples[sampleGroup.name] = sampleGroup.files;
+			}
+			Soundboard.self.loadBuffers();
+		} catch (e) {
+			Soundboard.self.onError(e);
+		}
 	};
-	var xhrGit = new XMLHttpRequest();
-	xhrGit.responseType = "arraybuffer";
-	xhrGit.open("GET", "git.m4a", true);
-	xhrGit.onload = function(e) {
-		Soundboard.self.actx.decodeAudioData(xhrGit.response).then(function(buffer) {
-			Soundboard.self.buffers.bufGit = buffer;
-		});
-	};
-	xhrRrah.send();
-	xhrGit.send();
+	xhrJson.send();
 }
 
-Soundboard.prototype.startRrah = function(name, event) {
-	console.log("started");
+Soundboard.prototype.loadBuffers = function() {
+	console.log("loading buffers");
+	
+	var samples = Soundboard.self.samples;
+	for (var sampleGroup in samples) {
+		if (samples.hasOwnProperty(sampleGroup)) {
+			sampleGroup = samples[sampleGroup];
+			for (var j = 0; j < sampleGroup.length; j++) {
+				var sample = sampleGroup[j];
+				var xhrAudio = new XMLHttpRequest();
+				xhrAudio.responseType = "arraybuffer";
+				xhrAudio.open("GET", "aud/" + sample.fileName, true);//HTTP GIT GIT GIT RRRRRRRRRRRRRRRRRRRRRRAH
+				xhrAudio.onload = function(sample, event) {
+					try {
+						Soundboard.self.actx.decodeAudioData(event.target.response).then(function(buffer) {
+							sample.buffer = buffer;
+						});
+					} catch (e) {
+						Soundboard.self.onError(e);	
+					}
+				}.bind(this, sample);
+				xhrAudio.send();
+			}
+			
+		}
+	}
+}
+
+Soundboard.prototype.startAudio = function(name, event) {
+	console.log("started " + name);
+	
 	var src = this.actx.createBufferSource();
-	src.loop = true;
-	src.buffer = this.buffers.bufRrah;
-	src.loopStart = 0.325;
-    src.loopEnd = 0.568;
+	var sampleGroup = this.samples[name];
+	var index = Math.floor(Math.random()*sampleGroup.length);
+	var smp = sampleGroup[index];
+	
+	if (smp.hasOwnProperty("loopStart")) {
+		src.loop = true;
+		src.loopStart = smp.loopStart;
+		src.loopEnd = smp.loopEnd;
+	}
+	
+	src.buffer = smp.buffer;
+	
 	src.connect(this.actx.destination);
 	
 	
-	if (this.sources.srcRrah != null) {
-		this.sources.srcRrah.stop();
+	if (this.sources.hasOwnProperty(name)) {
+		this.sources[name].stop();
 	}
-	this.sources.srcRrah = src;
+	this.sources[name] = src;
 	src.start();
 	
 	if (event) {
@@ -84,32 +132,11 @@ Soundboard.prototype.startRrah = function(name, event) {
 	}
 }
 
-Soundboard.prototype.endRrah = function(name, event) {
-	console.log("ended");
-	if (this.sources.srcRrah) {
-		this.sources.srcRrah.loop = false;
+Soundboard.prototype.endAudio = function(name, event) {
+	console.log("ended " + name);
+	if (this.sources.hasOwnProperty(name)) {
+		this.sources[name].loop = false;
 	}
-	this.elems.btnRrah.classList.remove("on");
-	
-	if (event) {
-		event.preventDefault();
-	}
-}
-
-Soundboard.prototype.playGit = function(event) {
-	var src = this.actx.createBufferSource();
-	src.buffer = this.buffers.bufGit;
-	src.connect(this.actx.destination);
-	
-	src.onended = function() {
-		this.sources.srcGit = null;
-	}.bind(this);
-	
-	if (this.sources.srcGit != null) {
-		this.sources.srcGit.stop();
-	}
-	this.sources.srcGit = src;
-	src.start();
 	
 	if (event) {
 		event.preventDefault();
