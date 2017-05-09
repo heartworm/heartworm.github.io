@@ -1,0 +1,103 @@
+body {
+    background-image: url('../img/side.png');
+    background-repeat: repeat-y;
+	font-family: 'Roboto', sans-serif;
+    width: 95%;
+    padding: 0px 0 0 30px;
+    margin: 0;
+    position: relative;
+}
+
+header.personal_details {
+    background-color: #222222;
+    background-image: linear-gradient(transparent 50%, #272727 50%);
+    background-size: 10px 10px;
+    color: #FFFFFF;
+}
+
+header.personal_details img {
+    width: auto;
+    float:left;
+    height: 100px;
+}
+
+header.personal_details h1 {
+    display: inline-block;
+    font-size: 30pt;
+    height: 100%;
+    line-height: 100px;
+    margin: 0;
+    margin-left: 35px;
+    vertical-align: middle;
+}
+
+span.contact_details {
+    margin-left: 20px;
+    padding-left: 10px;
+    border-left: 1px dotted white;
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 15pt
+    
+}
+
+section.achievement_class {
+    margin-left: 0;
+    position: relative;
+    width: 100%;
+	margin-top: 10px;
+}
+
+section.achievement_class h1 {
+    margin: 0;
+    font-size: 30pt;
+    line-height: 1.6em;
+    padding-left: 30px;
+    margin-bottom: 0;
+    vertical-align: middle;
+    background-color: #363993;
+    color: #e6e6e6;
+    font-family: 'Kanit';
+}
+
+
+section.achievement_class header {
+    font-family: 'Roboto Slab', serif;
+    display: flex;
+    flex-direction: row;
+    line-height: 2.25em;
+    vertical-align: center;
+    border-bottom: 1px dotted #626262;
+    background-color: #e6e6e6;
+    padding: 0 30px;
+}
+
+section.achievement_class h2, section.achievement_class h3 {
+    font-size: 12pt;
+    margin: 0;
+}
+
+section.achievement_class h3{
+    padding-left: 10px;
+    font-weight: lighter;
+    font-style: italic;
+}
+article.achievement header .date {
+    text-align: right;
+    flex-grow: 1;
+}
+
+article.achievement .body ul {
+    list-style-position: ;
+    margin-left: 50px;
+    padding-left: 0;
+    list-style-type: square;
+}
+
+article.achievement .body li {
+    margin-bottom: 0.5em;
+}
+
+.butt_top {
+    margin-top: 0 !important;
+}
