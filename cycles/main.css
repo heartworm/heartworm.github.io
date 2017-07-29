@@ -1,0 +1,11 @@
+#app {
+    font-family: sans-serif;
+    width: 768px;
+    margin: 0 auto;
+}
+
+
+.main_input{ 
+    margin: 10px 0;
+    padding: 5px 0;
+}
