@@ -38,8 +38,11 @@
             <near-stops v-on:chosen-rack="onChosenRack()" v-bind:loc="from" v-show="screen==1" ref="fromStops" v-bind:br="bikeRacks"></near-stops>
             <near-stops v-on:chosen-rack="onChosenRack()" v-bind:loc="to" v-show="screen==2" ref="toStops" v-bind:br="bikeRacks"></near-stops>
             <journey-overview :to="to" :from="from" :from-rack="fromRack" :to-rack="toRack" v-if="screen == 3" ref="journey"></journey-overview>
-        </div>        
             
+		    <a class="pure-u-1" style="text-align: center; margin-top: 10px;" href="/feedback.html">Bike Issue Feedback</a>    
+        </div>        
+        
+        
     	<script src="https://unpkg.com/vue"></script> 
 		<script src="latlon-spherical.js"></script> 
         <script src="main.js"></script>		
